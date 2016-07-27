@@ -126,7 +126,7 @@ def main(exeScriptPath):
 
             # BUG: nextVersion() or maxVersion() does NOT work here. If run seperately, the function works. WHY?!
             if versionUpBool == True:
-                print "next version: "+str(item.nextVersion())
+                item.nextVersion()
             processedItems.append(itemName)
         except:
             failedToProcess.append(itemName)

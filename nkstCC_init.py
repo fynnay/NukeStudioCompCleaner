@@ -116,8 +116,7 @@ DO NOT RUN on comps that have been worked on!!!
 #-------------------------------------------------------------------------------------------------
 # Returns the .nuke folder path
 #=================================================================================================
-def getNukeUserFolder(self):
-    Log = _DebugPrint('Settings.getNukeUserFolder',False)
+def getNukeUserFolder():
     for d in nuke.pluginPath():
         if os.path.isdir(d):
             if d.endswith(".nuke"):
@@ -134,16 +133,26 @@ def main():
     Log = _DebugPrint('nkstCC_init.main')
 
     # Python Scripts locations
-    exeSD  = os.path.dirname(__file__)
+    exeDir     = os.path.dirname(__file__) # preferably ~/.nuke
+    rscDirname = "nkstCC_resources"
+    rscDir     = os.path.join( exeDir,rscDirname ) # resources
+
+    if not os.path.exists(rscDir):
+        Log.msg("Can't find %s in %s.\nMake sure you have copied it and try again."%(rscDirname,exeDir))
+        return
+
+    # Add nkstCC_resources folder to nuke paths
+    nuke.pluginAddPath(rscDir)
+
     # Nuke Studio Script
     nkstSN = "nkstCC_nkst.py"
-    nkstSP = os.path.join(exeSD,nkstSN)
+    nkstSP = os.path.join(rscDir,nkstSN)
     # Nuke Script
     nukeSN = "nkstCC_nuke.py"
-    nukeSP = os.path.join(exeSD,nukeSN)
+    nukeSP = os.path.join(rscDir,nukeSN)
     # Commandline Script
     cmdlSN = "nkstCC_cmd.py"
-    cmdlSP = os.path.join(exeSD,cmdlSN)
+    cmdlSP = os.path.join(rscDir,cmdlSN)
     
     # Check nuke mode and assign script to run
     exeScriptPath = nkstSP if nuke.env['studio'] else nukeSP
