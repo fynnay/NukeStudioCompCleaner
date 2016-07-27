@@ -12,6 +12,7 @@ import os
 import sys
 import ast # for evaluating string to list
 import nkstCC_init
+import nkstCC_actions
 
 def main():
     '''
@@ -26,7 +27,7 @@ def main():
     In this case a popup window opens, where the user is asked to make some choices.
     '''
 
-    Log = nkstCC_init._DebugPrint("fix_specialcomp")
+    Log = nkstCC_init._DebugPrint('nkstCC_cmd.main',True)
     Log.msg("number of args: %s"%(len(sys.argv)))
 
     # Cancel if number of arguments is invalid
@@ -34,7 +35,6 @@ def main():
         Log.msg( "ERROR: Not enough sys.argv's passed to script 'fix_specialcomp.py'. Args passed: %s"%(len ( sys.argv )))
         sys.exit(-1)
 
-    Log = nkstCC_init._DebugPrint('runCommandLine',True)
     Log.msg("arg0: %s" % sys.argv[0])
     Log.msg("arg1: %s" % sys.argv[1])
     Log.msg("arg2: %s" % sys.argv[2])
@@ -55,15 +55,15 @@ def main():
     nuke.scriptOpen( inScript )
     # Run Functions        
     try:
-        setRootFormat(inpFormat)
+        nkstCC_actions.setRootFormat(inpFormat)
     except:
         Log.msg("Failed to set root format.")
     try:
-        AutoWriteFolder()
+        nkstCC_actions.AutoWriteFolder()
     except:
         Log.msg("Failed to fix auto write folder.")
     try:
-        deleteNodes()
+        nkstCC_actions.deleteNodes()
     except:
         Log.msg("Failed to delete nodes...")
 
