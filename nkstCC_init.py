@@ -2,9 +2,6 @@
 # SCRIPT : nkstCC_init.py :: Nuke Studio Comp Cleaner
 # v1.0
 #-------------------------------------------------------------------------------------------------
-# Created by Fynn Laue 2016
-# Thanks to Mads Hagbarth L. for code snippedts and sparring.
-#-------------------------------------------------------------------------------------------------
 # - Creates the _Debugprint class, that is used for printing messages by all scripts.
 # - Checks things and launches the next script.
 #=================================================================================================\

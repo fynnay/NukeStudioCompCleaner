@@ -94,3 +94,4 @@ def main():
             Log.msg("Saving Script...")
             nuke.scriptSave(nuke.root().name())
     Log.msg("Done.")
+    nuke.message("Done. See Script Editor for more information.")
