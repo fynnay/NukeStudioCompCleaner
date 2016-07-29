@@ -19,7 +19,7 @@ def main():
     versionUpBool = None
     allReadNodes = []
 
-    # Get all read node's names and input format from metadata
+    # Get all read node's names and input format
     #-------------------------------------
     for i in nuke.allNodes():
         if i.Class() == "Read":
@@ -42,35 +42,42 @@ def main():
     # Create the pop-up dialog
     #-------------------------------------
     info = "Select the read node with the format you want to use as the root format."
-    userOptions = nkstCC_init.ddList("Fix Specialcomp",allReadNodes,0,info)
-    if userOptions == None:
-        Log.msg("Cancelled.")
-        return
+    userOptions = nkstCC_init.ddList("Nuke Studio Comp Cleaner",allReadNodes,0,info)
     
     # Read userOptions
     #-------------------------------------
-    # Input Format
-    if userOptions[0] == "None":
+    if userOptions == None:
+        Log.msg("Cancelled.")
+        return
+    setPrjFormatBool  = userOptions.get('setPrjFormat')
+    mainPlate         = userOptions.get('mainPlate')
+    delNodesBool      = userOptions.get('delNodes')
+    autoWriteNodeBool = userOptions.get('autoWriteNode')
+    versionUpBool     = userOptions.get('versionUp')
+    
+    # Get mainPlate Format
+    #-------------------------------------
+    if mainPlate[0] == "None":
         inpFormat = None
     else:
-        inpReadName = userOptions[0].split(" : ")[0]
+        inpReadName = mainPlate.split(" : ")[0]
         nodeFormat  = nuke.toNode(inpReadName).format()
         inpFormat   = [ nodeFormat.width() , nodeFormat.height() , nodeFormat.pixelAspect() , inpReadName]
-    # versionUpBool
-    versionUpBool = userOptions[1]
 
     # Run Functions
     #-------------------------------------
     # Set root format
-    if not inpFormat == None:
+    if setPrjFormatBool == True and not inpFormat == None:
         nkstCC_actions.setRootFormat(inpFormat)
     # Auto Write Folder
-    nkstCC_actions.AutoWriteFolder()
+    if autoWriteNodeBool == True:
+        nkstCC_actions.AutoWriteFolder()
     # Delete Nodes
-    nuke.Undo.begin("Delete Unnecessary Nodes")
-    with nuke.Undo():
-        nkstCC_actions.deleteNodes()
-    nuke.Undo.end()
+    if delNodesBool == True:
+        nuke.Undo.begin("Delete Unnecessary Nodes")
+        with nuke.Undo():
+            nkstCC_actions.deleteNodes()
+        nuke.Undo.end()
 
     # Check if script is saved
     #-------------------------------------

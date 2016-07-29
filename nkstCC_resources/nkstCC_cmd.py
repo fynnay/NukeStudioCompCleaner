@@ -38,12 +38,18 @@ def main():
     Log.msg("arg0: %s" % sys.argv[0])
     Log.msg("arg1: %s" % sys.argv[1])
     Log.msg("arg2: %s" % sys.argv[2])
-    Log.msg("arg2: %s" % sys.argv[3])
+    Log.msg("arg3: %s" % sys.argv[3])
+    Log.msg("arg4: %s" % sys.argv[4])
+    Log.msg("arg5: %s" % sys.argv[5])
+    Log.msg("arg6: %s" % sys.argv[6])
     
-    pythonScript  = sys.argv[0]
-    nukeScript    = sys.argv[1]
-    inpFormat     = ast.literal_eval(sys.argv[2])
-    versionUpBool = ast.literal_eval(sys.argv[3]) # True or False
+    pythonScript      = sys.argv[0]
+    nukeScript        = sys.argv[1]
+    setPrjFormatBool  = ast.literal_eval(sys.argv[2])
+    inpFormat         = ast.literal_eval(sys.argv[3])
+    delNodesBool      = ast.literal_eval(sys.argv[4])
+    autoWriteNodeBool = ast.literal_eval(sys.argv[5])
+    versionUpBool     = ast.literal_eval(sys.argv[6]) # True or False
 
     # Open the Nuke File
     if not os.path.exists(nukeScript):
@@ -53,20 +59,25 @@ def main():
     inScript = nukeScript
     Log.msg("Opening script...")
     nuke.scriptOpen( inScript )
-    # Run Functions        
-    try:
-        nkstCC_actions.setRootFormat(inpFormat)
-    except:
-        Log.msg("Failed to set root format.")
-    try:
-        nkstCC_actions.AutoWriteFolder()
-    except:
-        Log.msg("Failed to fix auto write folder.")
-    try:
-        nkstCC_actions.deleteNodes()
-    except:
-        Log.msg("Failed to delete nodes...")
-
+    # RUN FUNCTIONS
+    # Set Project Format
+    if setPrjFormatBool == True:
+        try:
+            nkstCC_actions.setRootFormat(inpFormat)
+        except:
+            Log.msg("Failed to set root format.")
+    # Delete nodes
+    if delNodesBool == True:
+        try:
+            nkstCC_actions.deleteNodes()
+        except:
+            Log.msg("Failed to delete nodes...")
+    # AutoWriteFolder
+    if autoWriteNodeBool == True:
+        try:
+            nkstCC_actions.AutoWriteFolder()
+        except:
+            Log.msg("Failed to fix auto write folder.")
     # Save the script
     if versionUpBool == True:
         Log.msg("Saving Script as new version...")

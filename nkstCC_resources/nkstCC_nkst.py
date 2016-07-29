@@ -38,13 +38,16 @@ def main(exeScriptPath):
     seqVidTracks = activeSequence.videoTracks()
     allTrackNames = [ i.name() for i in seqVidTracks ]
     info = "Select the track that holds the footage you want to use as the root format in each .nk Script."
-    userOptions = nkstCC_init.ddList("Fix NukeStudio Comps",allTrackNames,0,info)
+    userOptions = nkstCC_init.ddList("Nuke Studio Comp Cleaner",allTrackNames,0,info)
+    # Evaluate userOptions
     if userOptions == None:
         Log.msg("Cancelled.")
         return
-    mainTrack     = userOptions[0]
-    versionUpBool = userOptions[1]
-    Log.msg("Version Up : %s"%(versionUpBool))
+    setPrjFormatBool  = userOptions.get('setPrjFormat')
+    mainTrack         = userOptions.get('mainPlate')
+    delNodesBool      = userOptions.get('delNodes')
+    autoWriteNodeBool = userOptions.get('autoWriteNode')
+    versionUpBool     = userOptions.get('versionUp')
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Process selected timeline items:
     noNukeScript    = []
@@ -82,45 +85,47 @@ def main(exeScriptPath):
 
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Get mainPlate from mainTrack
-        inPoint       = item.timelineIn()
-        outPoint      = item.timelineOut()-1
-        midPoint      = inPoint+(outPoint-inPoint)/2
-        mainPlate = None
-        def getMainPlate(TLtime):
-            brotherItems  = activeSequence.trackItemsAt(TLtime)
-            for clip in brotherItems:
-                if clip.parentTrack().name() == mainTrack:
-                    return clip
-            return None
-        # Check for mainplate at midPoint
-        mainPlate = getMainPlate(midPoint)
-        # If nothing was found, try the inPoint
-        if mainPlate == None:
-            mainPlate = getMainPlate(inPoint)
-        # If nothing was still found, try the outPoint
-        if mainPlate == None:
-            mainPlate = getMainPlate(outPoint)
-        # If mainPlate can't be found on mainTrack, fail item.
-        if mainPlate == None:
-            Log.msg("Can't find main plate for '%s' on track '%s'"%(itemName,mainTrack))
-            noMainPlate.append(itemName)    
-            continue
-        # Get mainPlate's format
-        #srcFile     = clip.source()
-        srcFile     = mainPlate.source()
-        srcName     = srcFile.name()
-        srcFormat   = srcFile.format()
-        srcWidth    = srcFormat.width()
-        srcHeight   = srcFormat.height()
-        srcPxAsp    = srcFormat.pixelAspect()
-        mpFormat    = [srcWidth, srcHeight, srcPxAsp, srcName] 
-        mpFormat[3] = mainTrack
-        rootFormat  = str(mpFormat) # [width, height, pxAspect, mainTrackName]
+        rootFormat = "None"
+        if setPrjFormatBool == True:
+            inPoint       = item.timelineIn()
+            outPoint      = item.timelineOut()-1
+            midPoint      = inPoint+(outPoint-inPoint)/2
+            mainPlate = None
+            def getMainPlate(TLtime):
+                brotherItems  = activeSequence.trackItemsAt(TLtime)
+                for clip in brotherItems:
+                    if clip.parentTrack().name() == mainTrack:
+                        return clip
+                return None
+            # Check for mainplate at midPoint
+            mainPlate = getMainPlate(midPoint)
+            # If nothing was found, try the inPoint
+            if mainPlate == None:
+                mainPlate = getMainPlate(inPoint)
+            # If nothing was still found, try the outPoint
+            if mainPlate == None:
+                mainPlate = getMainPlate(outPoint)
+            # If mainPlate can't be found on mainTrack, fail item.
+            if mainPlate == None:
+                Log.msg("Can't find main plate for '%s' on track '%s'"%(itemName,mainTrack))
+                noMainPlate.append(itemName)    
+                continue
+            # Get mainPlate's format
+            #srcFile     = clip.source()
+            srcFile     = mainPlate.source()
+            srcName     = srcFile.name()
+            srcFormat   = srcFile.format()
+            srcWidth    = srcFormat.width()
+            srcHeight   = srcFormat.height()
+            srcPxAsp    = srcFormat.pixelAspect()
+            mpFormat    = [srcWidth, srcHeight, srcPxAsp, srcName] 
+            mpFormat[3] = mainTrack
+            rootFormat  = str(mpFormat) # [width, height, pxAspect, mainTrackName]
         
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Open nuke script through command line and execute python script with arguments
         try:
-            exe = subprocess.Popen([nuke.EXE_PATH,'-t',exeScriptPath, nkScriptPath, rootFormat, str(versionUpBool)],stdout = subprocess.PIPE)
+            exe = subprocess.Popen([nuke.EXE_PATH,'-t',exeScriptPath, nkScriptPath, str(setPrjFormatBool), rootFormat, str(delNodesBool), str(autoWriteNodeBool), str(versionUpBool)],stdout = subprocess.PIPE)
             # Enable the next two lines for debugging the subprocess' stdout. The script will run significantly slower! 
             # txt = exe.communicate()[0]
             # Log.msg("subprocess stdout: >>> %s <<<"%txt)

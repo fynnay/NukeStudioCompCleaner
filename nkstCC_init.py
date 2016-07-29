@@ -74,8 +74,9 @@ DO NOT RUN on comps that have been worked on!!!
             self.disclaimer = nuke.Text_Knob("")
             self.disclaimer.setValue(discText)
             # Create and populate the dropdown list
-            self.dropDownList = nuke.Enumeration_Knob("mainPlate","Main Plate:",items) 
+            self.dropDownList = nuke.Enumeration_Knob("mainPlate","",items) 
             self.dropDownList.setValue(default)
+            self.dropDownList.clearFlag(nuke.STARTLINE)
             # Create info text
             if len(info)>0:
                 # Add some returns to the text, so it doesn't go out of frame.
@@ -88,6 +89,17 @@ DO NOT RUN on comps that have been worked on!!!
             self.divider2 = nuke.Text_Knob("")
             self.divider2.setFlag(nuke.STARTLINE)
             # Create Checkboxes
+            # Set project Format
+            self.setPrjFormat = nuke.Boolean_Knob("setPrjFormat","Set Project Format to: ",1)
+            self.setPrjFormat.setTooltip("Sets the scripts 'root' format to the format of the 'Main Plate' selected in the drop down menu.")
+            # Delete Nodes
+            self.delNodes = nuke.Boolean_Knob("delNodes","Delete Unnecessary Nodes",1)
+            self.delNodes.setTooltip("Deletes these nodes:\n- Reformat\n- Copy\n- Constant\n- AppendClip")
+            self.delNodes.setFlag(nuke.STARTLINE)
+            # Auto Write Node
+            self.autoWriteNode = nuke.Boolean_Knob("autoWriteNode","Add 'AutoWriteFolder'",1)
+            self.autoWriteNode.setTooltip("Adds a small python snippet to 'before render' field in all write nodes in the script.")
+            self.autoWriteNode.setFlag(nuke.STARTLINE)
             # Version up
             self.vCheckBox = nuke.Boolean_Knob("versionUp","Version Up .nk Script",1)
             self.vCheckBox.setFlag(nuke.STARTLINE)
@@ -95,7 +107,10 @@ DO NOT RUN on comps that have been worked on!!!
             # Add the UI elements to the window.
             self.addKnob(self.disclaimer)
             self.addKnob(self.divider1)
+            self.addKnob(self.setPrjFormat)
             self.addKnob(self.dropDownList)
+            self.addKnob(self.delNodes)
+            self.addKnob(self.autoWriteNode)
             self.addKnob(self.vCheckBox)
             self.addKnob(self.divider2)
     # Create instance of dropdownlist class
@@ -107,7 +122,21 @@ DO NOT RUN on comps that have been worked on!!!
     dialog = ddListInstance.showModalDialog()
     # Return selected item
     if dialog:
-        return [ddListInstance.dropDownList.value(),ddListInstance.vCheckBox.value()]
+        dic = {
+            "setPrjFormat"  : ddListInstance.setPrjFormat.value(),
+            "mainPlate"     : ddListInstance.dropDownList.value(),
+            "delNodes"      : ddListInstance.delNodes.value(),
+            "autoWriteNode" : ddListInstance.autoWriteNode.value(),
+            "versionUp"     : ddListInstance.vCheckBox.value()
+        }
+        lis = [
+            ddListInstance.dropDownList.value(), # Main Plate
+            ddListInstance.vCheckBox.value(),    # VersionUp
+            ddListInstance.setPrjFormat.value(), # Set project Format
+            ddListInstance.delNodes.value(),     # Delete Nodes
+            ddListInstance.autoWriteNode.value() # Auto Write Node
+        ]
+        return dic
     else:
         return None
 
