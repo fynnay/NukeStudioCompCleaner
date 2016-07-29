@@ -12,7 +12,7 @@ Run this script immediately after generating .nk files so the comps are ready to
 
 #### INSTALLATION: 
 - Copy the contents of "NukeStudioCompCleaner" to your ~/.nuke folder. You don't need to copy the LICENSE and README files.
-- Add the following code to the menu.py file:
+- Add the following code to the menu.py file (or copy it from the included nkstCC_resources/menu.py ):
 ```python
 import nkstCC_init
 if nuke.env['studio']: nuke.menu("Nuke").addMenu("nkstCC").addCommand("Clean Comps",nkstCC_init.main)
