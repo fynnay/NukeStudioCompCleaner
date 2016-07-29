@@ -1,6 +1,7 @@
 # Nuke Studio Comp Cleaner
 ### *by Fynn Laue 2016*
-### *Thanks to Mads Hagbarth L. for code snippedts and sparring.*
+
+#### *Thanks to [Mads Hagbarth L.](http://hagbarth.net/) for code snippets and sparring.*
 
 
 #### DESCRIPTION:
@@ -24,7 +25,7 @@ ONLY RUN IT ON NEWLY CREATED .NK SCRIPTS BY NUKE STUDIO !
 
 ##### Nuke Studio:
 - Select a bunch of "comp clips" in the timeline. (Items that are linked to .nk files)
-    - If you don't have any 'comp clips' in your timeline, read this article: http://help.thefoundry.co.uk/nuke/content/timeline_environment/exporting/building_vfx_tracks.html
+    - If you don't have any 'comp clips' in your timeline, read [this article](http://help.thefoundry.co.uk/nuke/content/timeline_environment/exporting/building_vfx_tracks.html).
 - Run the script from the menu nkstCC > Clean Comps
 - In the dropdown menu select the track that holds the footage you want to use as the root format in each .nk Script.
 - Enable/Disable other options
@@ -37,6 +38,7 @@ ONLY RUN IT ON NEWLY CREATED .NK SCRIPTS BY NUKE STUDIO !
 - Enable/Disable other options
 - Click OK
 - The script will process the currently open .nk file and display a message when it's done.
+
 
 
 ## DETAILED BREAKDOWN OF FUNCTIONALITY:
