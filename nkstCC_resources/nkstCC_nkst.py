@@ -74,14 +74,15 @@ def main(exeScriptPath):
         
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Check version
-        curVersion = item.currentVersion()
-        maxVersion = item.maxVersion()
-        if not curVersion == maxVersion:
-            Log.msg("Version mismatch for %s"%itemName)
-            versionMismatch.append(itemName)
+        if versionUpBool == True:
+            curVersion = item.currentVersion()
+            maxVersion = item.maxVersion()
+            if not curVersion.name() == maxVersion.name():
+                Log.msg("Version mismatch for %s"%itemName)
+                versionMismatch.append(itemName)
+                item.setCurrentVersion(curVersion)
+                continue
             item.setCurrentVersion(curVersion)
-            continue
-        item.setCurrentVersion(curVersion)
 
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # Get mainPlate from mainTrack
@@ -151,11 +152,12 @@ def main(exeScriptPath):
     msg+= "\n\n"
     msg+= "Version Mismatch: \n%s"%("\n".join(versionMismatch))
     if len(versionMismatch) > 0:
-        msg+= """\nWhen 'Version Up .nk Script' is checked, but the selected clip isn't linked to the latest version, the item can't be processed.
-There are 2 solutions to this:
-Handle this with care!! You might mess up a nuke script that has already been worked on. Remember that you should generally only run this script on newly created comps.
-[1] Max the version on the selected comp clips and try again with them selected.
-[2] Uncheck 'Version Up .nk Script'.\n"""
+        msg+= """\nWhen 'Version Up .nk Script' is checked, but the selected clip isn't linked to the latest version, the file can't be saved as a new version.
+There are several solutions to this:
+Remember that you should generally only run this script on newly created comps, NOT on comps that have been worked on.
+[1] Max the version on the selected comp clips, and try again with them selected.
+[2] Sometimes Nuke Studio thinks there are newer versions, when there arent. Try to remove all comp clips, 'build tracks' again and then try to run this script again.
+[3] Uncheck 'Version Up .nk Script'.\n"""
     Log.msg(msg)
     allFailedItems = noNukeScript + noMainPlate + versionMismatch + failedToProcess
     nuke.message("Done Processing.\n%s Items Processed.\n%s Items Failed\n\nSee script editor for more information."%(len(processedItems),len(allFailedItems)))
