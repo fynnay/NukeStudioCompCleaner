@@ -74,17 +74,19 @@ DO NOT RUN on comps that have been worked on!!!
             self.disclaimer = nuke.Text_Knob("")
             self.disclaimer.setValue(discText)
             # Create and populate the dropdown list
-            self.dropDownList = nuke.Enumeration_Knob("Main Plate:","%s "%name,items) 
+            self.dropDownList = nuke.Enumeration_Knob("mainPlate","Main Plate:",items) 
             self.dropDownList.setValue(default)
             # Create info text
             if len(info)>0:
                 # Add some returns to the text, so it doesn't go out of frame.
-                modText = "\n".join(textwrap.wrap(info[0],width=55,replace_whitespace=False,drop_whitespace=True))
-                self.infoText = nuke.Text_Knob("Info:")
-                self.infoText.setValue(modText)
-            # Create divider
-            self.divider = nuke.Text_Knob("")
-            self.divider.setFlag(nuke.STARTLINE)
+                modText = "\n".join(textwrap.wrap(info[0],width=60,replace_whitespace=False,drop_whitespace=True))
+                self.dropDownList.setTooltip(modText)
+            # Create divider1
+            self.divider1 = nuke.Text_Knob("")
+            self.divider1.setFlag(nuke.STARTLINE)
+            # Create divider2
+            self.divider2 = nuke.Text_Knob("")
+            self.divider2.setFlag(nuke.STARTLINE)
             # Create Checkboxes
             # Version up
             self.vCheckBox = nuke.Boolean_Knob("versionUp","Version Up .nk Script",1)
@@ -92,11 +94,10 @@ DO NOT RUN on comps that have been worked on!!!
             #---------------------------------------------
             # Add the UI elements to the window.
             self.addKnob(self.disclaimer)
-            if len(info)>0:
-                self.addKnob(self.infoText)
+            self.addKnob(self.divider1)
             self.addKnob(self.dropDownList)
-            self.addKnob(self.divider)
             self.addKnob(self.vCheckBox)
+            self.addKnob(self.divider2)
     # Create instance of dropdownlist class
     if len(infoText)>0:
         ddListInstance = DropDownlistWindow(dListName,dListitems,defaultItem,infoText[0])

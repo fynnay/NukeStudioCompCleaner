@@ -6,7 +6,8 @@
 # - Find the associated nuke script (in filesource's name)
 # - Find the mainPlate's format
 # - Run the "nkstCC_cmd.py" script for every nukeScript:
-# TODO: - Version up the clip if versionUpBool is True
+# BUG: - Version up the clip if versionUpBool is True : NOT WORKING
+# XXX: - Sometimes nuke studio thinks there are newer versions when there arent. Scanning for new versions and then trying again should fix this.
 #=================================================================================================
 import os
 import nuke
