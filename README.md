@@ -11,7 +11,7 @@ The idea is, that you generate 'special comps' in NukeStudio and immideately aft
 
 
 #### INSTALLATION: 
-- Copy the contents of "NukeStudioCompCleaner" to your ~/.nuke folder
+- Copy the contents of "NukeStudioCompCleaner" to your ~/.nuke folder. You don't need to copy the LICENSE and README files.
 - Add the following code to the menu.py file:
 import nkstCC_init
 if nuke.env['studio']: nuke.menu("Nuke").addMenu("nkstCC").addCommand("Clean Comps",nkstCC_init.main)
